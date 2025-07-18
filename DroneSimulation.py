@@ -47,6 +47,7 @@ class DroneSimulation:
         # Real-time attributes
         self.current_speed = 0.0
         self.current_road_id = None
+        self.battery_percent = 100.0
         self._setup_simulation()
 
     def get_parking_lane_waypoints(self):
@@ -163,6 +164,8 @@ class DroneSimulation:
         self.direction = 1
         self.yaw_angle = self.config.drone_view_angle
         self.current_yaw = 0.0  # Will be set in run
+        self.battery_percent = 100.0
+        self.battery_start_time = time.time()
         print(f"[DroneSimulation] Video quality set to '{self.config.video_quality}' ({self.width}x{self.height})")
         print("[DroneSimulation] Setup complete.")
         self._spawn_rgb_camera()
@@ -173,12 +176,26 @@ class DroneSimulation:
         fps = 0.0
         prev_x, prev_y, prev_z = self.current_x, self.current_y, self.current_z
         prev_fps_time = time.time()
+        self.battery_start_time = time.time()
         try:
             # Set initial yaw for forward direction
             self.current_yaw = 0.0
             while True:
+                # --- Simulate battery drain ---
+                elapsed = time.time() - self.battery_start_time
+                # Battery drains at 0.053% per second (like drone_vision.py)
+                self.battery_percent = max(0.0, 100.0 - 0.053 * elapsed)
+                # --- Reduce speed if battery is low ---
+                base_speed = self.config.drone_speed
+                if self.battery_percent < 30.0:
+                    # Linearly reduce speed from 30% to 0%
+                    speed_factor = max(0.2, self.battery_percent / 30.0)
+                    current_speed_setting = base_speed * speed_factor
+                else:
+                    current_speed_setting = base_speed
+
                 # Move drone (camera) along a path and reverse at endpoints
-                self.current_x += self.config.drone_speed * self.direction
+                self.current_x += current_speed_setting * self.direction
                 if self.direction == 1 and self.current_x >= self.end_x:
                     self.current_x = self.end_x
                     self.direction = -1
@@ -188,7 +205,7 @@ class DroneSimulation:
                     self.direction = 1
                     self.current_yaw = 0.0    # Look forward
                 # (You can add more complex movement logic here)
-                print(f"Drone position: x={self.current_x:.2f}, y={self.current_y:.2f}, z={self.current_z:.2f}, yaw={self.yaw_angle}, cam_yaw={self.current_yaw}")
+                print(f"Drone position: x={self.current_x:.2f}, y={self.current_y:.2f}, z={self.current_z:.2f}, yaw={self.yaw_angle}, cam_yaw={self.current_yaw} | Battery: {self.battery_percent:.2f}% | Speed: {current_speed_setting:.2f} m/s")
 
                 # Update camera transform to follow the drone and direction
                 if self.rgb_camera:
