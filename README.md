@@ -1,11 +1,8 @@
 # Carla Based Urban Drone Simulation
 
-# DroneSimulation
-
 ![alt Text](https://github.com/meysamraz/Carla-Based-Urban-Drone-Simulation/blob/master/src/demo_day.gif)
 ![alt Text](https://github.com/meysamraz/Carla-Based-Urban-Drone-Simulation/blob/master/src/demo_day_rainy.gif)
 ![alt Text](https://github.com/meysamraz/Carla-Based-Urban-Drone-Simulation/blob/master/src/demo_night.gif)
-
 
 
 Simulate urban drone flights in  [CARLA Simulator](https://carla.org/) with ease—ideal for computer vision, urban analytics, and autonomous systems projects.
@@ -50,11 +47,11 @@ Download from [python.org](https://www.python.org/downloads/).
 - Extract and run the simulator:
   - On Windows: double-click `CarlaUE4.exe` or run from terminal:
     ```sh
-    CarlaUE4.exe -carla-port=4000
+    CarlaUE4.exe -carla-port=YOUR_DESIRED_PORT
     ```
   - On Linux:
     ```sh
-    ./CarlaUE4.sh -carla-port=4000
+    ./CarlaUE4.sh -carla-port=YOUR_DESIRED_PORT
     ```
 - Wait for the CARLA window to fully load before running the Python script.
 
