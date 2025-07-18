@@ -8,14 +8,14 @@
 
 
 
-
-A modular, open-source drone simulation environment using [CARLA Simulator](https://carla.org/) for computer vision, robotics, and AI research. 
+Simulate urban drone flights in  [CARLA Simulator](https://carla.org/) with ease—ideal for computer vision, urban analytics, and autonomous systems projects.
 
 **Perfect for vision-based projects in urban environments:**
 - Test and develop algorithms for object detection, tracking, and scene understanding
 - Simulate smart city scenarios with realistic traffic, weather, and lighting
 - Collect synthetic data for deep learning and AI models
 - Experiment with drone navigation and perception in complex cityscapes
+
 
 Easily configure drone camera, speed, number of cars, weather, and time of day. Visualize the drone's camera in real time with OpenCV.
 
@@ -33,6 +33,8 @@ Easily configure drone camera, speed, number of cars, weather, and time of day. 
   - Traffic light timing
   - FPS overlay (optional)
 - Real-time access to drone speed and road ID
+- **Simulated battery drain and speed reduction as battery drops**
+- **Console output of battery and speed in real time**
 - Clean, extensible codebase
 
 ---
@@ -100,7 +102,7 @@ sim = DroneSimulation(config)
 sim.run()
 ```
 
-2. **Run the simulation:**
+2. **Run the simulation for test:**
 
 ```sh
 python test.py
@@ -108,6 +110,17 @@ python test.py
 
 3. **Control:**
 - Press `q` in the OpenCV window or `Ctrl+C` in the terminal to stop.
+- The console will show the drone's current position, battery percentage, and speed in real time.
+- When the battery drops below 30%, the drone will slow down automatically.
+
+---
+
+## Example Console Output
+
+```
+Drone position: x=10.00, y=20.15, z=60.00, yaw=-55.0, cam_yaw=0.0 | Battery: 98.50% | Speed: 1.00 m/s
+Drone position: x=..., ... | Battery: 28.00% | Speed: 0.93 m/s
+```
 
 ---
 
@@ -127,9 +140,18 @@ python test.py
 | display_fps       | bool    | Show FPS overlay in OpenCV window                | True            |
 | time_of_day       | str     | "day" or "night"                                 | "night"         |
 | weather_mode      | str     | "clear" or "rainy"                               | "rainy"         |
+| battery/speed     | auto    | Simulated battery drains over time, speed drops as battery gets low | (automatic)     |
 
 ---
 
+## Example requirements.txt
+
+```
+carla
+opencv-python
+numpy
+pandas
+```
 
 ---
 
@@ -144,4 +166,8 @@ python test.py
   - Lower the video quality or number of cars for better performance.
 
 ---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
